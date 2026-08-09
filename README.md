@@ -1,4 +1,4 @@
-Trabajo de Fin de Máster (TFM) - Máster Universitario en Big Data y Ciencia de Datos
+# Predicción del Mercado Inmobiliario con Inteligencia Artificial: Algoritmos de Machine Learning
 
 Este repositorio contiene el código, los archivos de Machine Learning y la aplicación web interactiva para la estimación de precios del mercado inmobiliario en la provincia de Vizcaya mediante una arquitectura de Stacking híbrido de dos niveles. Se pueden encontrar los siguientes archivos:
 - `app.py`: Aplicación web interactiva desarrollada en Streamlit para la interacción del usuario.
