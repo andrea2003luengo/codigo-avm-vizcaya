@@ -1,5 +1,4 @@
-# Sistema de Tasación Automatizada (AVM) - Vizcaya
-Trabajo de Fin de Máster (TFM) - Máster Universitario en Big Data y Ciencia de Datos (VIU)
+Trabajo de Fin de Máster (TFM) - Máster Universitario en Big Data y Ciencia de Datos
 
 Este repositorio contiene el código, los archivos de Machine Learning y la aplicación web interactiva para la estimación de precios del mercado inmobiliario en la provincia de Vizcaya mediante una arquitectura de Stacking híbrido de dos niveles. Se pueden encontrar los siguientes archivos:
 - `app.py`: Aplicación web interactiva desarrollada en Streamlit para la interacción del usuario.
