@@ -4168,6 +4168,67 @@ for i, row in df_sorted_r2.reset_index(drop=True).iterrows():
 plt.tight_layout()
 plt.show()
 
+# ====================================================================
+# PASO 3: Cálculo detallado de métricas del error absoluto (mejor modelo)
+# ====================================================================
+
+# Identificar el mejor modelo (menor MAE)
+mejor_modelo_nombre = df_resumen_tfm.loc[0, 'Modelo evaluado']
+mejor_mae_tabla = df_resumen_tfm.loc[0, 'MAE (euros)']
+mejor_r2_tabla = df_resumen_tfm.loc[0, 'R² (varianza explicada)']
+
+# Seleccionar el vector de predicciones en logaritmo correspondiente al mejor modelo
+mapeo_nombres = {
+    'ElasticNet (Base)': 'ElasticNet (Base)',
+    'Random Forest Regressor': 'Random Forest Regressor',
+    'LightGBM Regressor': 'LightGBM Regressor',
+    'XGBoost Regressor': 'XGBoost Regressor',
+    f'Stacking Híbrido Ganador (Caso {ganador_id})': f'Stacking Híbrido Ganador (Caso {ganador_id})'
+}
+
+# Buscar la clave exacta en el diccionario de predicciones
+clave_prediccion = None
+for k in predicciones_log.keys():
+    if k in mejor_modelo_nombre or mejor_modelo_nombre in k:
+        clave_prediccion = k
+        break
+
+if clave_prediccion is not None:
+    preds_log_mejor = predicciones_log[clave_prediccion]
+else:
+    preds_log_mejor = hibrido_preds_log
+
+# Convertir las predicciones a euros
+preds_euros_mejor = np.expm1(preds_log_mejor)
+
+# Generamos el vector de errores absolutos para el mejor modelo
+errores_absolutos = pd.Series(np.abs(y_true_euros - preds_euros_mejor))
+
+# Cálculo de los estadísticos detallados
+volumen_muestras = len(errores_absolutos)
+mae_exacto = errores_absolutos.mean()
+std_error = errores_absolutos.std()
+min_error = errores_absolutos.min()
+p25_error = errores_absolutos.quantile(0.25)
+mediana_error = errores_absolutos.median()
+p75_error = errores_absolutos.quantile(0.75)
+p90_error = errores_absolutos.quantile(0.90)
+max_error = errores_absolutos.max()
+
+print("====================================================================")
+print(f"Resumen estadístico de control del error absoluto: {mejor_modelo_nombre}")
+print("====================================================================")
+print(f"Volumen de muestras (N):           {volumen_muestras}")
+print(f"Error Absoluto Medio (MAE):        {mae_exacto:,.2f} €".replace(',', 'X').replace('.', ',').replace('X', '.'))
+print(f"Desviación estándar del error:     {std_error:,.2f} €".replace(',', 'X').replace('.', ',').replace('X', '.'))
+print(f"Error mínimo detectado:            {min_error:,.2f} €".replace(',', 'X').replace('.', ',').replace('X', '.'))
+print(f"Percentil 25% del error:           {p25_error:,.2f} €".replace(',', 'X').replace('.', ',').replace('X', '.'))
+print(f"Mediana del error:                 {mediana_error:,.2f} €".replace(',', 'X').replace('.', ',').replace('X', '.'))
+print(f"Percentil 75% del error:           {p75_error:,.2f} €".replace(',', 'X').replace('.', ',').replace('X', '.'))
+print(f"Percentil 90% del error:           {p90_error:,.2f} €".replace(',', 'X').replace('.', ',').replace('X', '.'))
+print(f"Error máximo detectado:            {max_error:,.2f} €".replace(',', 'X').replace('.', ',').replace('X', '.'))
+print(f"Coeficiente de determinación (R²): {mejor_r2_tabla:.2f}%".replace('.', ','))
+
 """## PASO 5: Descarga de *Pipelines* y meta-modelos"""
 
 # ====================================================================
